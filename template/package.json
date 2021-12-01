@@ -7,7 +7,7 @@
   "main": "src/index.js",
   "devDependencies": {},
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch --verbose",
     "results": "node src/results"
   },
   "keywords": [],
