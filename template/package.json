@@ -8,7 +8,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "jest --watch --verbose",
-    "results": "node src/results"
+    "results": "node src/results",
+    "result": "node src/results"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,4 @@
-const {} = require(".");
+const { part1, part2 } = require(".");
 
 describe("part1", () => {
   const testData = [];
