@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "jest": "^27.4.2"
+  },
+  "name": "adventofcode",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest --watch --verbose",
+    "results": "node src/results",
+    "result": "node src/results"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
