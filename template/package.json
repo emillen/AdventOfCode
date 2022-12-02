@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest --watch --verbose",
     "results": "node src/results",
-    "result": "node src/results"
+    "result": "node src/results",
+    "start": "node src/results"
   },
   "keywords": [],
   "author": "",
