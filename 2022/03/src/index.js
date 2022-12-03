@@ -19,7 +19,7 @@ const part1 = (input) => {
       const firstHalf = chars.slice(0, middleIndex);
       const secondHalf = chars.slice(-middleIndex);
 
-      return secondHalf.filter((char) => firstHalf.includes(char))[0];
+      return secondHalf.find((char) => firstHalf.includes(char));
     })
     .filter((letter) => letter);
   const scores = letters.map((letter) => charToScore(letter));
@@ -43,9 +43,7 @@ const part2 = (input) => {
     const second = group[1].split("");
     const third = group[2].split("");
 
-    return first.filter(
-      (char) => second.includes(char) && third.includes(char)
-    )[0];
+    return first.find((char) => second.includes(char) && third.includes(char));
   });
   return appearsInAllThree.reduce((acc, char) => acc + charToScore(char), 0);
 };
