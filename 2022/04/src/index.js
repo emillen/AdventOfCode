@@ -34,12 +34,11 @@ const part1 = (input) => {
 const part2 = (input) => {
   const lines = input.split("\n").filter((line) => line);
 
-  return lines.map(splitPairIntoRanges).filter(([firstRange, secondRange]) => {
-    return (
-      firstRange.some((num) => secondRange.includes(num)) ||
-      secondRange.some((num) => firstRange.includes(num))
-    );
-  }).length;
+  return lines
+    .map(splitPairIntoRanges)
+    .filter(([firstRange, secondRange]) =>
+      firstRange.some((num) => secondRange.includes(num))
+    ).length;
 };
 
 module.exports = {
