@@ -3,47 +3,55 @@ const fs = require("fs");
 const buffer = fs.readFileSync("./src/input.txt");
 const string = buffer.toString();
 
-const part1 = (input) => {
+const cmd = (line, { dirSizes, dirStack }) => {
+  const [_, cmd, arg] = line.split(" ");
+  if (cmd === "cd")
+    switch (arg) {
+      case "/":
+        return { dirSizes, dirStack: ["/"] };
+      case "..":
+        const [_, ...newDirStack] = dirStack;
+        return { dirSizes, dirStack: [...newDirStack] };
+      default:
+        return { dirSizes, dirStack: [arg, ...dirStack] };
+    }
+  return { dirSizes, dirStack };
+};
+
+const cmdOutput = (line, { dirStack, dirSizes }) => {
+  const [first, _] = line.split(" ");
+
+  if (!isNaN(parseInt(first))) {
+    const dirSizeChanges = [...dirStack]
+      .reverse()
+      .reduce((acc, _, index, self) => {
+        const dirName = self.slice(0, index + 1).join("/");
+        const currentValue = dirSizes[dirName] || 0;
+        return { ...acc, [dirName]: currentValue + parseInt(first) };
+      }, {});
+    return { dirStack, dirSizes: { ...dirSizes, ...dirSizeChanges } };
+  }
+  return { dirStack, dirSizes };
+};
+
+const getDirSizes = (input) => {
   const lines = input.split("\n").filter((row) => row);
 
-  let folderStack = [];
-  const folderSizes = {};
+  const { dirSizes } = lines.reduce(
+    (acc, line) => {
+      if (line.startsWith("$")) return cmd(line, acc);
+      else return cmdOutput(line, acc);
+    },
+    { dirStack: [], dirSizes: [] }
+  );
 
-  const cmd = (line) => {
-    const [_, cmd, arg] = line.split(" ");
-    if (cmd === "cd")
-      switch (arg) {
-        case "/":
-          folderStack = ["/"];
-          break;
-        case "..":
-          folderStack.pop();
-          break;
-        default:
-          folderStack.push(arg);
-          break;
-      }
-  };
+  return dirSizes;
+};
 
-  const cmdOutput = (line) => {
-    const [first, _] = line.split(" ");
+const part1 = (input) => {
+  const dirSizes = getDirSizes(input);
 
-    if (!isNaN(parseInt(first))) {
-      folderStack.forEach((_, index) => {
-        const folderName = folderStack.slice(0, index + 1).join("/");
-
-        const currentValue = folderSizes[folderName] || 0;
-        folderSizes[folderName] = currentValue + parseInt(first);
-      });
-    }
-  };
-
-  lines.forEach((line) => {
-    if (line.startsWith("$")) return cmd(line);
-    else return cmdOutput(line);
-  });
-
-  const sizesLessThan100k = Object.values(folderSizes).filter(
+  const sizesLessThan100k = Object.values(dirSizes).filter(
     (size) => size <= 100000
   );
 
@@ -51,46 +59,9 @@ const part1 = (input) => {
 };
 
 const part2 = (input) => {
-  const lines = input.split("\n").filter((row) => row);
+  const dirSizes = getDirSizes(input);
 
-  let folderStack = [];
-  const folderSizes = {};
-
-  const cmd = (line) => {
-    const [_, cmd, arg] = line.split(" ");
-    if (cmd === "cd")
-      switch (arg) {
-        case "/":
-          folderStack = ["/"];
-          break;
-        case "..":
-          folderStack.pop();
-          break;
-        default:
-          folderStack.push(arg);
-          break;
-      }
-  };
-
-  const cmdOutput = (line) => {
-    const [first, _] = line.split(" ");
-
-    if (!isNaN(parseInt(first))) {
-      folderStack.forEach((_, index) => {
-        const folderName = folderStack.slice(0, index + 1).join("/");
-
-        const currentValue = folderSizes[folderName] || 0;
-        folderSizes[folderName] = currentValue + parseInt(first);
-      });
-    }
-  };
-
-  lines.forEach((line) => {
-    if (line.startsWith("$")) return cmd(line);
-    else return cmdOutput(line);
-  });
-
-  const sorted = Object.values(folderSizes).sort((a, b) => a - b);
+  const sorted = Object.values(dirSizes).sort((a, b) => a - b);
   const total = 70000000;
   const amountUsed = sorted[sorted.length - 1];
   const amountNeeded = 30000000;
