@@ -3,37 +3,32 @@ const fs = require("fs");
 const buffer = fs.readFileSync("./src/input.txt");
 const string = buffer.toString();
 
+const isEdge = (grid, x, y) => {
+  return (
+    x === 0 || y === 0 || x === grid[0].length - 1 || y === grid.length - 1
+  );
+};
+
 const part1 = (input) => {
   const rows = input.split("\n");
   const grid = rows
-    .map((row) =>
-      row
-        .split("")
-        .map((num) => parseInt(num))
-        .filter((num) => !isNaN(num))
-    )
+    .map((row) => row.split("").map((num) => parseInt(num)))
     .filter((row) => row.length > 0);
-
-  const width = grid[0].length;
-  const height = grid.length;
-  const cirumference = width * 2 + height * 2 - 4;
 
   const amountVisible = grid.reduce((acc, row, y) => {
     return (
       acc +
       row.reduce((acc, num, x) => {
-        if (x === 0 || x === width - 1 || y === 0 || y === height - 1)
-          return acc;
+        if (isEdge(grid, x, y)) return acc + 1;
 
-        const row = grid[y];
         const col = grid.map((row) => row[x]);
 
-        const rightOfNum = row.slice(x + 1).every((n) => num > n);
-        const leftOfNum = row.slice(0, x).every((n) => num > n);
-        const belowNum = col.slice(y + 1).every((n) => num > n);
-        const aboveNum = col.slice(0, y).every((n) => num > n);
+        const visibleToRight = row.slice(x + 1).every((n) => num > n);
+        const visibleToLeft = row.slice(0, x).every((n) => num > n);
+        const visibleBelow = col.slice(y + 1).every((n) => num > n);
+        const visibleAbove = col.slice(0, y).every((n) => num > n);
 
-        if (rightOfNum || leftOfNum || belowNum || aboveNum) {
+        if (visibleToRight || visibleToLeft || visibleBelow || visibleAbove) {
           return acc + 1;
         }
 
@@ -42,27 +37,18 @@ const part1 = (input) => {
     );
   }, 0);
 
-  return amountVisible + cirumference;
+  return amountVisible;
 };
 const part2 = (input) => {
   const rows = input.split("\n");
   const grid = rows
-    .map((row) =>
-      row
-        .split("")
-        .map((num) => parseInt(num))
-        .filter((num) => !isNaN(num))
-    )
+    .map((row) => row.split("").map((num) => parseInt(num)))
     .filter((row) => row.length > 0);
-
-  const width = grid[0].length;
-  const height = grid.length;
 
   const scores = grid.map((row, y) => {
     return row.map((num, x) => {
-      if (x === 0 || x === width - 1 || y === 0 || y === height - 1) return 0;
+      if (isEdge(grid, x, y)) return 0;
 
-      const row = grid[y];
       const col = grid.map((row) => row[x]);
 
       const rightOfNum = row.slice(x + 1);
