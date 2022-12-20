@@ -8,6 +8,7 @@ My solutions for adventofcode. I never do all of them :D
    ```bash
    cp -r ./template ./2022/23
    cd ./2022/23
+   npm install
    ```
 2. You start the tests
    ```bash
@@ -18,5 +19,7 @@ My solutions for adventofcode. I never do all of them :D
 5. Make the test pass
 6. Get the result
    ```bash
-   npm start
+   npm run result    # get both answers
+   npm run result p1 # get only part 1
+   npm run result p2 # get only part 2
    ```

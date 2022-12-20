@@ -1,6 +1,4 @@
 const { part1result, part2result } = require(".");
-let p1res = undefined;
-let p2res = undefined;
 
 if (
   process.argv[2] === "part1" ||
@@ -9,7 +7,7 @@ if (
   process.argv[2] === undefined
 ) {
   console.time("Part 1 performance");
-  p1res = part1result();
+  const p1res = part1result();
   console.timeEnd("Part 1 performance");
   console.log(`Part 1 result: ${p1res}`);
 }
@@ -23,7 +21,7 @@ if (
   process.argv[2] === undefined
 ) {
   console.time("Part 2 performance");
-  p2res = part2result();
+  const p2res = part2result();
   console.timeEnd("Part 2 performance");
   console.log(`Part 2 result: ${p2res}`);
 }
