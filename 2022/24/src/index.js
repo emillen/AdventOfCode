@@ -31,6 +31,16 @@ const parse = (input) => {
   return { map, entrance: { ...upperNonWall }, exit: { ...lowerNonWall } };
 };
 
+const addToCell = (cell, c) => {
+  let newCell = [...cell, c];
+
+  if (newCell.length > 1) {
+    newCell = newCell.filter((c) => c !== EMPTY);
+  }
+
+  return newCell;
+};
+
 const moveWinds = (map) => {
   const height = map.length;
   const width = map[0].length;
@@ -39,9 +49,8 @@ const moveWinds = (map) => {
     Array.from({ length: width }, () => [EMPTY])
   );
 
-  for (let y = 0; y < height; y++) {
-    for (x = 0; x < width; x++) {
-      const cell = map[y][x];
+  map.forEach((row, y) => {
+    row.forEach((cell, x) => {
       cell.forEach((c) => {
         const leftIndex = x - 1 > 0 ? x - 1 : width - 2;
         const rightIndex = x + 1 < width - 1 ? x + 1 : 1;
@@ -50,42 +59,25 @@ const moveWinds = (map) => {
 
         switch (c) {
           case LEFT_WIND:
-            newMap[y][leftIndex].push(c);
-            if (newMap[y][leftIndex].length > 1)
-              newMap[y][leftIndex] = newMap[y][leftIndex].filter(
-                (c) => c !== EMPTY
-              );
-
+            newMap[y][leftIndex] = addToCell(newMap[y][leftIndex], c);
             break;
           case RIGHT_WIND:
-            newMap[y][rightIndex].push(c);
-            if (newMap[y][rightIndex].length > 1)
-              newMap[y][rightIndex] = newMap[y][rightIndex].filter(
-                (c) => c !== EMPTY
-              );
+            newMap[y][rightIndex] = addToCell(newMap[y][rightIndex], c);
             break;
 
           case UP_WIND:
-            newMap[upIndex][x].push(c);
-            if (newMap[upIndex][x].length > 1)
-              newMap[upIndex][x] = newMap[upIndex][x].filter(
-                (c) => c !== EMPTY
-              );
+            newMap[upIndex][x] = addToCell(newMap[upIndex][x], c);
             break;
 
           case DOWN_WIND:
-            newMap[downIndex][x].push(c);
-            if (newMap[downIndex][x].length > 1)
-              newMap[downIndex][x] = newMap[downIndex][x].filter(
-                (c) => c !== EMPTY
-              );
+            newMap[downIndex][x] = addToCell(newMap[downIndex][x], c);
             break;
           case WALL:
             newMap[y][x] = [WALL];
         }
       });
-    }
-  }
+    });
+  });
 
   return newMap;
 };
